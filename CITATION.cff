@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Se citi questo progetto, usa questi metadati."
+title: "Zeno: prototipo di ricerca di motore epistemico personale"
+type: software
+authors:
+  - family-names: Modesto
+    given-names: Michele
+version: 0.1.0
+date-released: 2026-11-05
+license: MIT
+repository-code: "https://github.com/Lupini97/zeno-cognitive-mirror"
+url: "https://github.com/Lupini97/zeno-cognitive-mirror"
