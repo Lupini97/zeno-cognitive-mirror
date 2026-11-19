@@ -1,0 +1,51 @@
+[server]
+headless = true
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
+[client]
+showErrorDetails = false
+
+# Tema di Zeno: variante "schedario" (generato da tema_zeno.py)
+[theme]
+font = "'Charter', 'Iowan Old Style', ui-serif, Georgia, serif"
+headingFont = "'DIN Condensed', 'DIN Alternate', 'Avenir Next Condensed', 'Futura', sans-serif"
+codeFont = "ui-monospace, 'SF Mono', Menlo, monospace"
+baseFontSize = 16
+baseRadius = "0rem"
+showSidebarBorder = true
+chartCategoricalColors = ["#3F78AE", "#B5652C", "#3F8F63", "#8566B0", "#8A867C", "#C9962F"]
+
+[theme.light]
+primaryColor = "#2A5C8A"
+backgroundColor = "#EEEBE3"
+secondaryBackgroundColor = "#E3DFD4"
+textColor = "#1D1C19"
+borderColor = "#CBC6B8"
+linkColor = "#2A5C8A"
+blueColor = "#2A5C8A"
+greenColor = "#2F7A55"
+orangeColor = "#B98416"
+redColor = "#A8322A"
+violetColor = "#74559E"
+dataframeHeaderBackgroundColor = "#E3DFD4"
+dataframeBorderColor = "#CBC6B8"
+
+[theme.dark]
+primaryColor = "#79A9D6"
+backgroundColor = "#121314"
+secondaryBackgroundColor = "#1E1F22"
+textColor = "#E8E6DF"
+borderColor = "#35373B"
+linkColor = "#79A9D6"
+blueColor = "#79A9D6"
+greenColor = "#6CC495"
+orangeColor = "#D2A23E"
+redColor = "#FF8A80"
+violetColor = "#B49BE0"
+dataframeHeaderBackgroundColor = "#1E1F22"
+dataframeBorderColor = "#35373B"
+

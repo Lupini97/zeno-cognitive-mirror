@@ -1,0 +1,212 @@
+# percorsi: facoltativo. Di serie le cartelle stanno sotto BRAIN (la cartella
+# che contiene scripts/, oppure ZENO_BRAIN): documents, zeno.db,
+# memoria_elaborata, obsidian_vault, stats, models, import_staging.
+# Per spostarne una:
+#   percorsi:
+#     documents: /percorso/dei/miei/documenti
+rete:
+  # Zeno non manda mai i tuoi testi fuori dal computer. La rete serve solo a:
+  controllo_aggiornamenti: true   # chiedere a PyPI e HuggingFace le versioni nuove
+  download_modelli: true          # scaricare da HuggingFace i pesi che mancano
+  # La ricerca web parte solo quando premi «Cerca sul web» in chat.
+identita:
+  nome_utente: Utente        # il nome con cui Zeno ti chiama nei prompt
+  lingua_risposta: italiano
+modelli:
+  llm: mlx-community/Qwen3.5-4B-4bit
+  embeddings: mlx-community/bge-m3-mlx-fp16
+  timeout_secondi: 600
+  similarity_top_k: 5
+  response_mode: simple_summarize
+ui:
+  # Aspetto di chat e dashboard: biblioteca | notturno | schedario (tema_zeno.py)
+  tema: schedario
+soglie:
+  lacuna_similarita: 0.35
+  tag_max_per_documento: 10
+estrazione:
+  motore_pdf: pymupdf
+  ocr_abilitato: true
+  ocr_lingue: ita+eng
+  soglia_leggibilita: 0.65
+  min_chars_pagina: 50
+intake:
+  soglia_similarita_lacuna: 0.35
+  min_chars_documento: 200
+  max_chars_preview: 3000
+  soglia_chars_dialogo: 30
+enrich:
+  pausa_secondi: 1.5
+  max_risultati_ricerca: 3
+  max_chars_estratto: 600
+  timeout_openlibrary: 8
+  pausa_openlibrary: 0.5
+  timeout_gutenberg: 20
+  pausa_wikisource_secondi: 3.0
+  aree_serie:
+  - manga
+  - fumetti
+  aree_escluse:
+  - manga
+  - letteratura-per-ragazzi
+  - letteratura_per_ragazzi
+  - narrativa-interattiva
+  - fumetti
+snapshot:
+  frequenza_giorni: 6
+  tag_top_n: 30
+  aree_documenti:
+  - libri
+  - articoli_saggistica
+  - formazione
+  - riflessioni
+  - pubblicazioni
+mind:
+  frequenza_giorni: 5
+  max_temi_per_run: 10
+mbti:
+  frequenza_giorni: 10
+  learning_rate: 0.1
+  learning_rate_calibrato: 0.02
+  giorni_lookback_sessioni: 30
+  soglia_giorni_calibrazione: 30
+  soglia_sessioni_calibrazione: 15
+temi:
+  # Temi a cui dai la precedenza (si gestiscono anche dalla dashboard).
+  prioritari: []
+  soglia_gerarchia: 0.3
+graph:
+  frequenza_giorni: 5
+  soglia_similarita_semantica: 0.45
+  max_archi_per_nodo: 70
+  peso_minimo_arco: 0.1
+  decay_giorni: 180
+  history_max_settimane: 52
+web_search:
+  max_risultati: 3
+  max_chars_estratto: 600
+profilo_cognitivo:
+  # Facoltativo. Vuoto: le risposte non usano alcun profilo.
+  stato_calibrazione: in_calibrazione
+  punteggi: {}
+update_checker:
+  frequenza_giorni: 30
+  librerie:
+  - sqlite-vec
+  - streamlit
+  - mlx
+  - mlx-lm
+  - llguidance
+  - pymupdf
+  - pytesseract
+  - networkx
+  - plotly
+  - pandas
+maieutica:
+  soglia_domande: 7
+  soglia_minuti: 20
+  min_chars_risposta_utente: 60
+  parole_convergenza:
+  - quindi
+  - in sintesi
+  - alla fine
+  - credo che
+  - mi rendo conto
+  - ho capito
+  - direi che
+  - in definitiva
+  keywords_tensione:
+  - non so se
+  - ma d'altra parte
+  - eppure
+  - però allo stesso tempo
+  - mi contraddico
+  - non sono sicuro
+  - forse entrambe
+lacune:
+  soglia_giorni_persistenza: 14
+  max_lacune_agenda_maieutica: 5
+  normalizza_testo: true
+retrieval:
+  top_k_fetch_multiplier: 8
+  top_k_fetch_min: 50
+  pesi_strato:
+    esplicito: 1.5
+    inferito:  1.3
+    dialogico: 1.1
+    acquisito: 1.0
+  quota_garantita:
+    esplicito: 1
+    inferito:  1
+  penalita_abbondanza:    0.3
+  bonus_temporalita:      0.15
+  tau_temporalita_giorni: 365
+  soglia_min_score:       0.25
+  keywords_query_tematica:
+    - cosa penso
+    - come la penso
+    - mia visione
+    - mio pensiero
+    - come ragiono
+    - fammi un riassunto di
+    - dimmi cosa penso
+    - mia etica
+    - mia idea su
+    - cosa credo
+    - mia opinione
+    - il mio pensiero
+cross_linker:
+  frequenza_giorni: 3
+  soglia_semantica: 0.5
+  max_connessioni_per_libro: 10
+  aree_escluse:
+  - manga
+  - letteratura-per-ragazzi
+  - narrativa-interattiva
+  - fumetti
+  aree_corpus_escluse:
+  - vivino
+
+# ── Motore epistemico (V6, zeno_engine) — vedi AUDIT.md ──────────────────────
+motore_epistemico:
+  modelli:
+    # Repo HuggingFace in formato MLX, serviti dal demone zeno_engine.mlx_server.
+    # I vecchi nomi Ollama restano accettati (zeno_engine/modelli.py::ALIAS).
+    # Un solo modello per tutti i ruoli (2,9 GB in memoria).
+    router: mlx-community/Qwen3.5-4B-4bit
+    motore_batch: mlx-community/Qwen3.5-4B-4bit   # Archivista, Critico, temi
+    motore_ask: mlx-community/Qwen3.5-4B-4bit     # risposte in chat
+    embeddings: mlx-community/bge-m3-mlx-fp16
+  chunk:
+    max_chars: 1800
+    min_chars: 200
+  retrieval:
+    top_k: 5
+  sync:
+    # Chunk nuovi estratti SUBITO all'avvio (una citazione, una recensione):
+    # oltre questa soglia si passa al batch in background.
+    estrazione_incrementale_max: 12
+    # Arretrato grosso: l'Archivista parte da solo, staccato dall'avvio, con
+    # questo tetto per esecuzione. archivista_auto: false per disattivarlo.
+    archivista_auto: true
+    archivista_background_max: 150
+    # Job periodici anche ad APP APERTA (2026-08-24): prima giravano
+    # solo a `zeno sync`, cioè all'avvio. Il timer vive nella sidebar della chat
+    # e non lancia mai il lavoro nel processo della UI: fa partire
+    # `zeno manutenzione` staccato.
+    periodici_ad_app_aperta: true
+    periodici_check_minuti: 15
+    # Quiete richiesta dall'ultimo messaggio in chat prima di lanciare un batch:
+    # `schede` dura ~40 minuti e si prende il motore MLX.
+    periodici_idle_minuti: 10
+  briefing:
+    frequenza_giorni: 1          # un briefing (con le proposte di ripasso) al giorno
+  ripasso:
+    soglia_asserzioni_povere: 2  # <= a queste asserzioni una scheda è "povera"
+    cooldown_giorni: 14          # non riproporre la stessa scheda prima di N giorni
+    max_proposte: 3              # 1-3 "cose da ricordare" per briefing
+    # pesi_area: override di zeno_engine/ripasso.py::PESI_AREA_DEFAULT (facoltativo)
+    # pesi_temi: override di zeno_engine/ripasso.py::_pesi_temi (facoltativo)
+    #   default: {'Vino e sensorialità': 0.1}
+    # keyword_archivio_extra: parole aggiuntive (oltre a cross_linker.aree_escluse
+    #   + aree_corpus_escluse) da trattare come "contenuto di consultazione"

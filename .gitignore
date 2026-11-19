@@ -1,2 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# macOS
 .DS_Store
+
+# Log e stato runtime — mai nel repo
+*.log
+chunk_densi.log
+archi_confermati.json
+archi_rifiutati.json
+mbti_marcatori_cache.json
+
+# Config reale con percorsi personali (nel repo va solo il template)
+zeno_config.yaml
+
+# Dati personali — protezione extra se mai finissero qui dentro
+documents/
+obsidian_vault/
+qdrant_storage/
+memoria_elaborata/
+stats/
 ._*
+.AppleDouble

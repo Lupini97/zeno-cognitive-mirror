@@ -1,50 +1,131 @@
 # Zeno
 
-**English summary.** Zeno is a local research prototype of a personal epistemic engine, designed as a "cognitive mirror": it organises what a person has written and read, surfaces connections and contradictions, and asks questions rather than only giving answers. It runs entirely on the user's own computer. It is not a product and has not been validated on real users. This page describes the project; the source code is not published yet.
+**English summary.** Zeno is a local research prototype of a personal epistemic
+engine, designed as a "cognitive mirror": it organises what a person has written
+and read, surfaces connections and contradictions, and asks questions rather
+than only giving answers. It runs entirely on the user's own Mac (Apple Silicon,
+MLX). It is not a product and has not been validated on real users.
 
 ---
 
-Zeno è un prototipo di ricerca di motore epistemico personale, pensato come «specchio cognitivo»: organizza nel tempo ciò che una persona ha scritto e letto, ne fa emergere connessioni e contraddizioni e pone domande invece di limitarsi a fornire risposte.
+Zeno è un prototipo di ricerca di motore epistemico personale, pensato come
+«specchio cognitivo». Organizza nel tempo ciò che una persona ha scritto e
+letto, ne fa emergere connessioni e contraddizioni e pone domande invece di
+limitarsi a fornire risposte.
 
-> **Stato di questa pagina.** Questa pagina descrive il progetto. Il codice non è ancora pubblico: prima va ripulito dai dati personali presenti nel codice e nella cronologia delle versioni. Qui non ci sono dati personali né contenuti dell'archivio dell'autore, che non è destinato alla pubblicazione.
+È un prototipo sviluppato da una sola persona e usato su un solo archivio. Non è
+un prodotto e non è stato validato su utenti reali. Zeno non addestra alcun
+modello: arricchire l'archivio migliora solo il recupero delle informazioni.
 
-## Che cosa è
+## Che cosa serve
 
-- Un prototipo di ricerca, sviluppato da una sola persona.
-- Un sistema locale: archivio, indice, modelli e risposte restano sul computer dell'utente.
-- Uno strumento che riflette il pensiero di chi lo usa e lo interroga.
+- Un Mac con Apple Silicon (M1 o successivi). Il prototipo è provato su un
+  MacBook Air M3 con 16 GB di memoria.
+- [Homebrew](https://brew.sh) e il suo Python (3.12 o più recente):
+  `brew install python@3.14`. Il Python di sistema di macOS non va bene, perché
+  non permette a SQLite di caricare estensioni.
+- Circa 6 GB liberi: 4 GB per i modelli, il resto per l'ambiente Python.
+- Facoltativo, per i PDF fatti di immagini: `brew install tesseract tesseract-lang`.
 
-## Che cosa non è
+Linux e Windows per ora non sono supportati: i modelli girano con MLX, che
+richiede Apple Silicon.
 
-- Non è un prodotto e non è pronto per un uso generale.
-- Non è stato validato su utenti reali, e la qualità delle risposte non è stata misurata in modo sistematico.
-- Non addestra alcun modello: arricchire l'archivio migliora soltanto il recupero delle informazioni.
-- Non è una coscienza in senso letterale.
+## Installazione
+
+```bash
+mkdir -p ~/Zeno && cd ~/Zeno
+git clone https://github.com/Lupini97/zeno-cognitive-mirror.git scripts
+cd scripts
+./installa.sh
+```
+
+`installa.sh` crea l'ambiente Python, le cartelle e il file
+`zeno_config.yaml` accanto al codice, poi scarica i due modelli (circa 4 GB).
+Rilanciarlo non sovrascrive configurazione, documenti o archivio.
+
+Apri `~/Zeno/zeno_config.yaml` e scrivi il tuo nome in `identita.nome_utente`.
+
+## Uso
+
+1. Metti i tuoi testi in Markdown (`.md`) dentro `~/Zeno/documents/`:
+   - `riflessioni/` e `pubblicazioni/`: ciò che hai scritto tu (peso massimo);
+   - `libri/`, `articoli_saggistica/`, `formazione/`: ciò che hai letto o studiato;
+   - `chatgpt/` o `gemini/`: conversazioni archiviate.
+   PDF, DOCX e HTML si convertono con `python -m zeno_engine converti`.
+2. Avvia Zeno: `~/Zeno/scripts/avvia_zeno.sh`.
+3. Apri <http://localhost:8501> (chat) e <http://localhost:8502> (dashboard).
+
+Al primo avvio Zeno legge i documenti e calcola gli embedding. L'estrazione
+delle asserzioni, i temi e il grafo procedono poi in background, mentre l'app è
+aperta e non la stai usando. Su un archivio grande servono ore.
+
+Comandi utili, da `scripts/`:
+
+```bash
+../.venv_zeno/bin/python -m zeno_engine ask "domanda"
+../.venv_zeno/bin/python -m zeno_engine sync
+../.venv_zeno/bin/python -m zeno_engine --help
+```
 
 ## Come funziona
 
-Il prototipo gira su un MacBook Air M3 con 16 GB di memoria.
+- **Archivio**: un file SQLite (`zeno.db`), con sqlite-vec per la ricerca
+  vettoriale e FTS5 per quella testuale.
+- **Modelli**: Qwen3.5-4B per risposte, estrazione e temi, bge-m3 per gli
+  embedding, in formato MLX. Un demone locale (127.0.0.1:11500) li tiene in
+  memoria, un modello per volta.
+- **Quattro strati di conoscenza**, con priorità diverse nel recupero:
+  esplicito (ciò che hai scritto), acquisito (ciò che hai letto), dialogico
+  (conversazioni), inferito (asserzioni ed entità estratte dal modello).
+- **Risposte**: ricerca vettoriale e testuale, pesi per strato, al massimo
+  cinque frammenti al modello. Il modello decide prima, con una chiamata a
+  parte, se i frammenti bastano; se non bastano la risposta dichiara la lacuna
+  invece di colmarla per inferenza.
+- **Grafo e domande**: NetworkX con comunità di Louvain; altre componenti
+  cercano contraddizioni fra le tue asserzioni e generano domande socratiche.
+- **Interfaccia**: Streamlit, chat e dashboard.
 
-- **Archivio:** SQLite, con sqlite-vec per la ricerca vettoriale e FTS5 per quella testuale.
-- **Modelli:** bge-m3 per gli embedding, Qwen3-4B per la generazione del testo, eseguiti con MLX. Le versioni precedenti usavano Ollama e Llama 3.1 8B.
-- **Quattro strati di conoscenza**, con priorità diverse nel recupero: esplicito (ciò che la persona ha scritto), acquisito (libri, articoli, formazione), dialogico (conversazioni archiviate), inferito (asserzioni ed entità estratte dal modello).
-- **Risposte:** ogni domanda combina ricerca vettoriale e testuale, ripesa i risultati per strato e passa al modello al massimo cinque frammenti. Se non bastano, la risposta dichiara la lacuna invece di colmarla per inferenza.
-- **Grafo:** costruito con NetworkX, con rilevamento di comunità tramite l'algoritmo di Louvain. Alimenta le elaborazioni periodiche e la consultazione dell'archivio, ed è esportabile in un vault compatibile con Obsidian.
-- **Domande:** altre componenti cercano contraddizioni tra asserzioni e generano domande socratiche a partire dall'archivio.
+Struttura del codice:
 
-Tre moduli sono implementati ma non attivi nella configurazione descritta: il router basato su modello linguistico, l'espansione iterativa del recupero tramite entità e il riordino dei risultati (reranker).
+```
+scripts/
+├── chat_ui.py, dashboard.py, zeno_app.py   pagine Streamlit
+├── avvia_zeno.sh, installa.sh               avvio e installazione
+├── zeno_engine/                             il motore: python -m zeno_engine <comando>
+│   ├── config.py                            unico lettore di zeno_config.yaml
+│   ├── ingest, archivista, indicizzatore, ask, critico, sync, periodici, ...
+│   ├── mlx_server, mlx_motore, mlx_embed    demone e modelli MLX
+│   └── valutazione.py, prompt_chat.py       misura della qualità (zeno valuta)
+├── interfaccia/                             tema, grafo 3D, finestra, aggiornamenti
+└── tests/                                   test con dati inventati
+```
 
-## Rete
+## Rete e dati personali
 
-Il funzionamento di base resta sul computer dell'utente, senza servizi cloud per archivio e risposte. La rete serve solo per scaricare i modelli, per il controllo degli aggiornamenti e per il pulsante facoltativo «Cerca sul web», che invia la ricerca a un motore esterno quando l'utente lo preme.
+Vedi [PRIVACY.md](PRIVACY.md). In breve: i tuoi testi non lasciano il
+computer. La rete serve solo a scaricare i modelli, a controllare le versioni
+nuove (si spengono entrambi da `zeno_config.yaml`, sezione `rete`) e alla
+ricerca web, che parte solo quando premi «Cerca sul web».
 
 ## Limiti
 
-I test automatici esistenti coprono soltanto una parte del sistema, relativa all'importazione delle letture. Le osservazioni sul prototipo derivano dall'uso personale dell'autore e non sono generalizzabili.
+- Le misure di qualità vengono da un solo archivio e da 30 domande: indicano
+  una tendenza, non dimostrano nulla in generale.
+- I test automatici coprono il guardiano del demone e le lacune, non tutto
+  il sistema.
+- L'interfaccia e i prompt sono in italiano.
+
+## Test
+
+```bash
+cd scripts
+../.venv_zeno/bin/python -m unittest discover -s tests -t . -v
+```
 
 ## Come citare
 
-Michele Modesto (2026). *Zeno: prototipo di ricerca di motore epistemico personale*. I metadati sono in [`CITATION.cff`](CITATION.cff).
+Michele Modesto (2026). *Zeno: prototipo di ricerca di motore epistemico
+personale*. I metadati sono in [CITATION.cff](CITATION.cff).
 
 ## Licenza
 

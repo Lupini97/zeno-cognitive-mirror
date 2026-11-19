@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: Modesto
     given-names: Michele
-version: 0.1.0
-date-released: 2026-11-05
+version: 0.2.0
+date-released: 2026-11-19
 license: MIT
 repository-code: "https://github.com/Lupini97/zeno-cognitive-mirror"
 url: "https://github.com/Lupini97/zeno-cognitive-mirror"
