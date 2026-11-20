@@ -8,7 +8,8 @@ rete:
   # Zeno non manda mai i tuoi testi fuori dal computer. La rete serve solo a:
   controllo_aggiornamenti: true   # chiedere a PyPI e HuggingFace le versioni nuove
   download_modelli: true          # scaricare da HuggingFace i pesi che mancano
-  # La ricerca web parte solo quando premi «Cerca sul web» in chat.
+  # Cercare sul web e scaricare pagine: solo con l'interruttore «Integrazione
+  # web» acceso in chat (spento di serie), e solo quando premi il pulsante.
 identita:
   nome_utente: Utente        # il nome con cui Zeno ti chiama nei prompt
   lingua_risposta: italiano

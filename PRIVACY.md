@@ -9,8 +9,8 @@ risposte restano nella cartella in cui lo installi.
 |---|---|---|---|
 | Installazione e primo avvio | huggingface.co | la richiesta dei pesi dei modelli | `rete.download_modelli: false` |
 | Ogni 30 giorni circa | pypi.org, huggingface.co | i nomi delle librerie e dei modelli, per sapere se ci sono versioni nuove | `rete.controllo_aggiornamenti: false` |
-| Quando premi «Cerca sul web» | il motore di ricerca di `ddgs` | il testo della ricerca che vedi nel campo | non premere il pulsante |
-| Quando incolli un indirizzo da importare | il sito indicato | la richiesta di quella pagina | non usare l'importazione da URL |
+| Quando premi «Cerca sul web», con «Integrazione web» acceso | il motore di ricerca di `ddgs` | il testo della ricerca che vedi nel campo | lascia spento «Integrazione web» (è spento di serie) |
+| Quando premi «Importa pagina», con «Integrazione web» acceso | il sito indicato | la richiesta di quella pagina | lascia spento «Integrazione web» |
 
 I tuoi testi, le domande alla chat e le risposte non vengono mai inviati
 altrove. Il codice non contiene alcuna chiamata a servizi di intelligenza

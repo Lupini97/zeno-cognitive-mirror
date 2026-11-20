@@ -104,9 +104,10 @@ dello strato esplicito.
 - **Barra laterale**: nome, versione, stato dei lavori in background
   («Processi Zeno»), numero di documenti e frammenti, conteggio dei libri
   letti e da leggere.
-- **Errori e lacune**: le lacune aperte. Accanto a ognuna il pulsante «Cerca
-  sul web» manda una ricerca al motore di `ddgs` e ti mostra i risultati
-  prima di salvarli. È l'unico punto della chat che usa internet.
+- **Errori e lacune**: le lacune aperte. Accanto a ognuna, con «Integrazione
+  web» acceso, «Cerca sul web» manda una ricerca al motore di `ddgs` e
+  «Importa pagina» scarica l'indirizzo che incolli. In entrambi i casi vedi il
+  risultato prima di salvarlo.
 - **Impostazioni**: modello, soglie e lingua in uso, più il pulsante per
   rileggere la configurazione.
 - **Aggiornamenti**: versioni nuove delle librerie e dei modelli, se il
@@ -115,8 +116,13 @@ dello strato esplicito.
   una recensione, una sinossi o una nota sull'autore nella scheda di un libro,
   oppure una riflessione generale, senza aprire i file.
 
-L'interruttore «Integrazione web» in alto oggi non ha effetto: la ricerca sul
-web parte solo dal pulsante «Cerca sul web».
+**Integrazione web.** L'interruttore in alto nella chat apre o chiude la
+porta verso internet, per la chat e per la dashboard insieme. È spento di
+serie, e resta come lo lasci fra un avvio e l'altro (`stats/ricerca_web.json`).
+Spento, i pulsanti «Cerca sul web» e «Importa pagina» sono disattivati e le
+funzioni che aprirebbero la connessione si rifiutano di farlo. Non riguarda
+il download dei modelli e il controllo delle versioni, che si spengono in
+`zeno_config.yaml`, sezione `rete`.
 
 ## 4. La dashboard
 

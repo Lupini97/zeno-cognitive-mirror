@@ -253,8 +253,10 @@ dopo l'avvio è più lenta, perché Zeno carica il modello in memoria.
   nel dialogo cambi posizione, lo segna con `EVOLUZIONE:`. A fine sessione ti
   propone una nota, che puoi correggere e salvare.
 
-Il pulsante «Cerca sul web» è l'unico che usa internet, e parte solo quando lo
-premi.
+L'interruttore «Integrazione web», in alto nella chat, decide se Zeno può
+usare internet. È spento di serie: Zeno non cerca e non scarica nulla. Se lo
+accendi, accanto alle lacune funzionano «Cerca sul web» e «Importa pagina»,
+in chat e in dashboard, e partono solo quando premi il pulsante.
 
 **4. Guarda la dashboard.** Le schede mostrano statistiche dell'archivio, il
 grafo in 3D, il diario settimanale, l'evoluzione nel tempo, i temi (da
@@ -422,8 +424,9 @@ dal set di 30. Le tabelle complete, il metodo e i limiti sono in
 Dettagli in [PRIVACY.md](PRIVACY.md). In breve: i tuoi testi non lasciano il
 computer e il codice non chiama alcun servizio di intelligenza artificiale
 esterno. La rete serve a scaricare i modelli, a controllare ogni 30 giorni se
-ci sono versioni nuove e alla ricerca web quando premi «Cerca sul web». I
-primi due si spengono da `zeno_config.yaml`, sezione `rete`. Chat e dashboard
+ci sono versioni nuove e, solo se accendi «Integrazione web», a cercare sul
+web o a scaricare una pagina quando lo chiedi tu. I primi due si spengono da
+`zeno_config.yaml`, sezione `rete`. Chat e dashboard
 ascoltano solo su `localhost`.
 
 ## Comandi da terminale

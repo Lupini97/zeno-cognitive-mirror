@@ -69,7 +69,7 @@ st.markdown('''<style>
 </style>''', unsafe_allow_html=True)
 
 cfg = carica_config()
-from interfaccia import tema_zeno
+from interfaccia import tema_zeno, rete_web
 from zeno_engine.config import PYTHON, SCRIPTS, con_nome
 tema_zeno.applica(cfg)
 
@@ -687,6 +687,8 @@ if 'apri' in _qp:
 
 # ── Web search ────────────────────────────────────────────────────────────────
 def cerca_sul_web(query, max_risultati=3):
+    if not rete_web.attiva():
+        return [], rete_web.CHIUSA
     try:
         with DDGS() as ddgs:
             risultati = list(ddgs.text(query, max_results=max_risultati))
@@ -710,10 +712,12 @@ def estrai_query_da_lacuna(testo_lacuna, query_originale):
     return query_originale
 
 def importa_da_url(url):
+    if not rete_web.attiva():
+        return None, rete_web.CHIUSA
     try:
         import requests
         from bs4 import BeautifulSoup
-        headers = {'User-Agent': 'Mozilla/5.0 (compatible; Zeno/4.0)'}
+        headers = {'User-Agent': 'Mozilla/5.0 (compatible; Zeno)'}
         resp = requests.get(url, headers=headers, timeout=10)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, 'html.parser')
@@ -2349,11 +2353,13 @@ if 'pannello_aperto' not in st.session_state:
 _h1, _h2, _h3 = st.columns([2.5, 1, 0.4])
 with _h2:
     web_attivo = st.toggle(
-        'Integrazione web', value=False,
+        'Integrazione web', value=rete_web.attiva(), key='integrazione_web',
+        on_change=lambda: rete_web.imposta(st.session_state['integrazione_web']),
         help=(
-            'Se attivo, Zeno cerca sul web SOLO quando il tuo archivio '
-            'non è sufficiente. Il tuo archivio rimane sempre la fonte primaria. '
-            'Tutto ciò che recupera ti viene mostrato prima di essere salvato.'
+            'Spento: Zeno non usa internet né per cercare né per scaricare '
+            'pagine. Acceso: accanto alle lacune funzionano «Cerca sul web» e '
+            '«Importa pagina», in chat e in dashboard. Parte solo quello che '
+            'chiedi tu, e vedi i risultati prima di salvarli.'
         )
     )
 with _h3:
@@ -2427,14 +2433,17 @@ if st.session_state.pannello_aperto:
                                  height=120, disabled=True,
                                  key=f'lac_txt_{i}', label_visibility='collapsed')
 
-                    # Cerca sul web — sempre visibile, indipendente dal toggle
+                    # Cerca sul web e Importa pagina: solo con «Integrazione web» acceso
+                    _web_ok = rete_web.attiva()
+                    if not _web_ok:
+                        st.caption(rete_web.CHIUSA)
                     btn_key = f'web_lacuna_{i}'
                     res_key = f'web_risultati_{i}'
                     query_mirata = estrai_query_da_lacuna(lacuna['testo'], lacuna['query'])
 
                     _wb1, _wb2 = st.columns([2, 1])
                     with _wb1:
-                        if st.button('🔍 Cerca sul web', key=btn_key):
+                        if st.button('🔍 Cerca sul web', key=btn_key, disabled=not _web_ok):
                             with st.spinner(f'Ricerca: "{query_mirata}"...'):
                                 risultati, err = cerca_sul_web(query_mirata)
                             if err:
@@ -2445,7 +2454,7 @@ if st.session_state.pannello_aperto:
                                 st.warning('Nessun risultato trovato.')
                     with _wb2:
                         if res_key in st.session_state:
-                            if st.button('🔄 Rigenera', key=f'web_regen_{i}'):
+                            if st.button('🔄 Rigenera', key=f'web_regen_{i}', disabled=not _web_ok):
                                 del st.session_state[res_key]
                                 with st.spinner('Nuova ricerca...'):
                                     _nr, _ne = cerca_sul_web(query_mirata)
@@ -2487,7 +2496,8 @@ if st.session_state.pannello_aperto:
                     st.markdown('**Aggiungi una fonte manualmente:**')
                     url_input = st.text_input('Incolla URL', key=url_key,
                                               placeholder='https://...')
-                    if url_input and st.button('📥 Importa pagina', key=f'importa_{i}'):
+                    if url_input and st.button('📥 Importa pagina', key=f'importa_{i}',
+                                               disabled=not _web_ok):
                         with st.spinner('Scarico e filtro la pagina...'):
                             titolo_url, testo_url = importa_da_url(url_input)
                         if testo_url and titolo_url:

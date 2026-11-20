@@ -108,6 +108,9 @@ stats_dir = cfg['percorsi']['stats']
 
 # ── Web search per lacune (grafo) ─────────────────────────────────────────────
 def cerca_sul_web(query, max_risultati=3):
+    from interfaccia import rete_web
+    if not rete_web.attiva():
+        return [], rete_web.CHIUSA
     try:
         from ddgs import DDGS
         with DDGS() as ddgs:
@@ -122,10 +125,13 @@ def cerca_sul_web(query, max_risultati=3):
 
 def importa_da_url_dash(url):
     """Scarica e filtra il testo di una pagina web."""
+    from interfaccia import rete_web
+    if not rete_web.attiva():
+        return None, rete_web.CHIUSA
     try:
         import requests
         from bs4 import BeautifulSoup
-        headers = {'User-Agent': 'Mozilla/5.0 (compatible; Zeno/4.0)'}
+        headers = {'User-Agent': 'Mozilla/5.0 (compatible; Zeno)'}
         resp = requests.get(url, headers=headers, timeout=12)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, 'html.parser')
@@ -1370,8 +1376,11 @@ with tab_lacune:
                                               lacuna.get('area', ''))
                             st.success('Aggiunta all\'agenda MAIEUTICA.')
                             st.rerun()
+                    from interfaccia import rete_web as _rete_web
+                    _web_ok = _rete_web.attiva()
                     with _a2:
-                        if st.button('🔍 Cerca sul web', key=f'lac_web_{i}'):
+                        if st.button('🔍 Cerca sul web', key=f'lac_web_{i}', disabled=not _web_ok,
+                                     help=None if _web_ok else _rete_web.CHIUSA):
                             with st.spinner('Ricerca...'):
                                 _wr, _we = cerca_sul_web(lacuna.get('testo', '')[:80])
                             if _we:
@@ -1432,7 +1441,9 @@ with tab_lacune:
                     _url_k = f'lac_url_{i}'
                     _url_rk = f'lac_urlres_{i}'
                     _url_v = st.text_input('Incolla URL', key=_url_k, placeholder='https://...')
-                    if _url_v and st.button('📥 Importa pagina', key=f'lac_urlbtn_{i}'):
+                    if _url_v and st.button('📥 Importa pagina', key=f'lac_urlbtn_{i}',
+                                            disabled=not _web_ok,
+                                            help=None if _web_ok else _rete_web.CHIUSA):
                         with st.spinner('Scarico...'):
                             _tit_u, _tes_u = importa_da_url_dash(_url_v)
                         if _tes_u and _tit_u:
