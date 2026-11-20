@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: Modesto
     given-names: Michele
-version: 0.2.1
+version: 0.2.2
 date-released: 2026-11-20
 abstract: >-
   Prototipo di ricerca di un motore epistemico personale ("specchio

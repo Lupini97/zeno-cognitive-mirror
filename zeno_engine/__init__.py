@@ -8,4 +8,4 @@
 # Numero di versione unico: lo mostrano la schermata iniziale, la chat, la
 # dashboard, avvia_zeno.sh e `python -m zeno_engine --version`. Va cambiato
 # insieme a version in CITATION.cff.
-__version__ = '0.2.1'
+__version__ = '0.2.2'

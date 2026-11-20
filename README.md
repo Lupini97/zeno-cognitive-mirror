@@ -383,7 +383,7 @@ Limiti da tenere presenti:
 ## Modelli provati e miglioramenti
 
 Zeno è cambiato molto fra giugno e novembre 2026. Gli schemi interni hanno due
-nomi, V5 e V6; le versioni pubblicate del software si chiamano 0.2.0, 0.2.1 e
+nomi, V5 e V6; le versioni pubblicate del software si chiamano 0.2.0, 0.2.1, 0.2.2 e
 così via.
 
 | Periodo | Schema | Modello linguistico | Embedding | Esecuzione |
@@ -479,11 +479,13 @@ cd ~/Zeno/scripts && ../.venv_zeno/bin/python -m unittest discover -s tests -t .
 ## Come citare
 
 Michele Modesto (2026). *Zeno: prototipo di ricerca di motore epistemico
-personale* (versione 0.2.1). Zenodo. https://doi.org/10.5281/zenodo.24398096
+personale* (versione 0.2.2). Zenodo. https://doi.org/10.5281/zenodo.24393322
 
-Il DOI di tutte le versioni, che porta sempre all'ultima, è
-https://doi.org/10.5281/zenodo.24393322. La versione 0.2.0 ha il DOI
-https://doi.org/10.5281/zenodo.24393323. I metadati sono in [CITATION.cff](CITATION.cff): GitHub li mostra nel pulsante «Cite this
+Il DOI qui sopra raccoglie tutte le versioni e porta sempre all'ultima. Le
+versioni precedenti hanno un DOI proprio: 0.2.1
+https://doi.org/10.5281/zenodo.24398096, 0.2.0
+https://doi.org/10.5281/zenodo.24393323. I metadati sono in
+[CITATION.cff](CITATION.cff): GitHub li mostra nel pulsante «Cite this
 repository».
 
 ## Licenza
