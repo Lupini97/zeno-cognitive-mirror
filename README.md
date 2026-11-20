@@ -1,5 +1,7 @@
 # Zeno
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24393322.svg)](https://doi.org/10.5281/zenodo.24393322)
+
 **English summary.** Zeno is a local research prototype of a personal epistemic
 engine, designed as a "cognitive mirror": it organises what a person has written
 and read, surfaces connections and contradictions, and asks questions rather
@@ -125,7 +127,10 @@ cd scripts
 ## Come citare
 
 Michele Modesto (2026). *Zeno: prototipo di ricerca di motore epistemico
-personale*. I metadati sono in [CITATION.cff](CITATION.cff).
+personale* (versione 0.2.0). Zenodo. https://doi.org/10.5281/zenodo.24393323
+
+Il DOI di tutte le versioni, che porta sempre all'ultima, è
+https://doi.org/10.5281/zenodo.24393322. I metadati sono in [CITATION.cff](CITATION.cff).
 
 ## Licenza
 
