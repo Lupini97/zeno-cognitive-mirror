@@ -601,7 +601,7 @@ with tab_grafo3d:
                     if _comm:
                         with st.expander(f'🧩 {len(_comm)} community emerse (cluster trasversali ai temi)'):
                             st.caption('Gruppi di entità che compaiono insieme nelle tue '
-                                       'asserzioni — scoperti da Louvain, non dai 10 temi fissi. '
+                                       'asserzioni — scoperti da Louvain, non dai temi. '
                                        'Nel grafo: pulsante "Colora per: Community".')
                             for _c in _comm:
                                 st.markdown(f"- **{_c['label']}** "
@@ -757,12 +757,12 @@ with tab_stat:
     col3, col4 = st.columns(2)
     with col3:
         st.subheader('Temi per connessioni')
-        st.caption('Tutti i 10 temi V6 ordinati per connessioni nel grafo. '
+        st.caption('Tutti i temi ordinati per connessioni nel grafo. '
                    'La ⭐ marca quelli segnati prioritari in zeno_config.yaml.')
         _prio_labels_stat = {t.lower() for t in cfg.get('temi', {}).get('prioritari', [])}
         # TUTTI i temi (non solo i prioritari): prima il bug mostrava una barra
-        # sola perché i nomi 'prioritari' del config V5 non combaciano coi 10
-        # topic V6 (solo 'Geopolitica' matchava). Ora si mostrano tutti, con ⭐.
+        # sola perché i nomi 'prioritari' del config V5 non combaciavano coi
+        # temi V6 (ne combaciava uno solo). Ora si mostrano tutti, con ⭐.
         temi_prio = [{'tema': ('⭐ ' if n['label'].lower() in _prio_labels_stat else '') + n['label'],
                       'connessioni': max(1, _gradi_stat.get(n['id'], 0))}
                      for n in _temi_nodi_stat]

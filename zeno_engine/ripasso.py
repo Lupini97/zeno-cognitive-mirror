@@ -76,10 +76,9 @@ def _pesi_area(cfg: dict) -> dict:
 
 
 def _pesi_temi(cfg: dict) -> dict:
-    # Il topic 'Vino e sensorialità' esiste già nella tassonomia (db.py,
-    # TOPICS_SEED): se una scheda finisce comunque per avere asserzioni
-    # legate a quel topic (es. libro di enologia in area 'libri'), pesa
-    # comunque poco — coerente con l'esclusione per path.
+    # Le recensioni importate da Vivino finiscono nel tema 'Vino e
+    # sensorialità' (indicizzatore.OVERRIDE_TOPIC_PATH), se esiste: una scheda
+    # di quel tema pesa poco nel ripasso, coerente con l'esclusione per path.
     default = {'Vino e sensorialità': 0.1}
     override = _sezione_ripasso(cfg).get('pesi_temi')
     return {**default, **override} if override else default

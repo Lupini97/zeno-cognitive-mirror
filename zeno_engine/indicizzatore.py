@@ -19,7 +19,7 @@ import time
 from datetime import datetime
 
 
-from zeno_engine import modelli, tassonomia
+from zeno_engine import db as zdb, modelli, tassonomia
 from zeno_engine.config import BRAIN
 
 
@@ -93,34 +93,15 @@ def embed_query(testo: str, cfg: dict) -> bytes:
 
 # Override deterministico path→topic (stesso principio di strati.py in V5:
 # prima il path, poi il modello). Senza, il router 3B fa aggancio lessicale
-# su un termine ("metodo classico" di un vino → "Metodo e OSINT") perché
+# su un termine (il "metodo classico" di uno spumante → un tema di metodologia)
+# perché
 # riceve solo il testo nudo dell'asserzione, senza sapere che la fonte è
 # una recensione. Verificato sul campo il 2026-07-11.
 OVERRIDE_TOPIC_PATH = {'/vivino/': 'Vino e sensorialità'}
 
-# Etichette nude confondono un 3B (vedi sopra); una riga di descrizione per
-# topic taglia gli agganci lessicali sbagliati.
-DESCRIZIONI_TOPIC = {
-    'Intelligence e sicurezza': 'servizi segreti, spionaggio, sicurezza nazionale',
-    'Geopolitica': 'rapporti di potere tra Stati, relazioni internazionali, conflitti',
-    'AI ed etica': 'intelligenza artificiale, sua etica, impatto su società e lavoro',
-    'Criminalità organizzata': 'mafie, corruzione, crimine organizzato',
-    'Islam ed Europa': 'Islam, integrazione, rapporti tra mondo islamico ed Europa',
-    'Complessità ed epistemologia': 'teoria della complessità, conoscenza, filosofia della scienza',
-    'Metodo e OSINT': 'metodologia di analisi e ricerca, fonti aperte, tecniche investigative '
-                      '(NON il "metodo classico" di vinificazione di uno spumante)',
-    'Scrittura creativa': 'narrativa, poesia, scrittura personale di @UTENTE@',
-    'Vino e sensorialità': 'degustazione di vino, note sensoriali, abbinamenti',
-    'Vita professionale/militare': 'carriera, vita militare, formazione professionale di @UTENTE@',
-    # Sotto-tema creato VUOTO di proposito (2026-07-28): non nasce da un cluster
-    # ma si popola dal limbo e dai documenti futuri. Senza descrizione sarebbe
-    # un'etichetta nuda in concorrenza con "AI ed etica" (che la descrizione ce
-    # l'ha) e attirerebbe il materiale sbagliato.
-    'AI e Mente Umana': 'rapporto fra intelligenza artificiale e mente/coscienza umana: '
-                        'pensiero, consapevolezza, creativita\', cervello, trasformazione '
-                        'dell\'uomo davanti alla macchina (NON l\'etica o l\'impatto sociale '
-                        'dell\'AI, che stanno in "AI ed etica")',
-}
+# Etichette nude confondono un modello piccolo (vedi sopra): una riga di
+# descrizione per tema taglia gli agganci lessicali sbagliati. Le descrizioni
+# vengono da zeno_config.yaml (db.descrizioni_temi) e dalla dashboard.
 
 PROMPT_TOPIC = """Classifica l'asserzione in UNO dei temi elencati, usando anche la fonte
 da cui viene per capire il contesto.
@@ -248,7 +229,7 @@ def riclassifica_madri(con, cfg: dict, modello: str | None = None,
     schema = {'type': 'object',
               'properties': {'topic': {'type': 'string', 'enum': list(madri) + ['Nessuno']}},
               'required': ['topic']}
-    descr = {**DESCRIZIONI_TOPIC, **tassonomia.descrizioni(con)}
+    descr = {**zdb.descrizioni_temi(), **tassonomia.descrizioni(con)}
     elenco = '\n'.join(f'- {n}: {descr.get(n, n)}' for n in madri)
 
     riga = con.execute("SELECT value FROM meta WHERE key='riclassifica_cursore'").fetchone()

@@ -2,9 +2,9 @@
 # spostamenti, a partire dal CONTENUTO delle asserzioni (embedding bge-m3).
 #
 # Perché non basta temi.proponi_temi_nuovi(): quella raggruppa le ENTITÀ
-# (co-menzione) e propone solo figli. Il 25/09/2026 ha prodotto "Valutazione
-# Vini" costruito su Libia, Gheddafi e Italo Calvino, "Geopolitica
-# Internazionale" (2.075 asserzioni) doppione del padre, figli di figli. E il
+# (co-menzione) e propone solo figli. Il 25/09/2026 ha prodotto un tema con
+# un nome che non c'entrava nulla con le entità raggruppate, un figlio
+# (2.075 asserzioni) doppione del padre, figli di figli. E il
 # limbo — il segnale più forte che manca un tema madre — non veniva mai usato
 # per scoprire temi, solo per riclassificare.
 #
@@ -38,7 +38,7 @@ FIGLIO_MIN = 30
 FONTI_MIN = 10              # documenti distinti perché un gruppo sia un tema
 FIGLI_PER_MADRE = 3
 # Louvain taglia una stessa zona in gruppi quasi uguali: il 28/09/2026 tre
-# figli proposti per il vino, tre per la geopolitica, con centri a 0,86-0,95.
+# figli proposti per uno stesso tema, con centri a 0,86-0,95.
 # Dentro una madre si tiene il più ampio e si scartano i gemelli.
 SIM_GEMELLI = 0.85
 # Unioni: NON la similarità dei centroidi — con bge-m3 i centroidi di temi in
@@ -494,8 +494,8 @@ def genera(con, cfg: dict, verboso: bool = False) -> int:
     for k in ('madri_nuove', 'figli_nuovi'):
         out[k] = [p for p in out[k] if not _gia_rifiutata(p, rif)]
     nomina_proposte(out, cfg, verboso)
-    # Via i nomi vuoti e quelli che ripetono un tema esistente ("Vini e
-    # sensorialità" dentro "Vino e sensorialità": resto non smistato, non un tema).
+    # Via i nomi vuoti e quelli che ripetono un tema esistente (un plurale o
+    # una variante del nome di un tema: resto non smistato, non un tema).
     from difflib import SequenceMatcher
     esistenti = [n.lower() for (n,) in con.execute('SELECT name FROM topics')]
     for k in ('madri_nuove', 'figli_nuovi'):

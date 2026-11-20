@@ -121,6 +121,13 @@ open -e ~/Zeno/zeno_config.yaml
 
 e cambia `nome_utente: Utente` con il tuo nome. Salva e chiudi.
 
+Zeno ordina le asserzioni in temi. Parte con dieci temi generici (lavoro,
+studio, scrittura, società, scienza, filosofia, storia, arte, relazioni,
+salute). Dalla scheda «Gestione temi» della dashboard li rinomini, ne crei e ne
+ritiri, e Zeno ne propone di nuovi quando legge i tuoi documenti. Se preferisci
+partire dai tuoi, scrivili in `temi.iniziali` prima del primo avvio: il file
+contiene un esempio.
+
 Alla fine `~/Zeno` contiene:
 
 ```
@@ -305,9 +312,6 @@ Limiti da tenere presenti:
 - I test automatici coprono il guardiano del demone e la gestione delle
   lacune, non tutto il sistema.
 - Interfaccia e istruzioni al modello sono in italiano.
-- Zeno parte con dieci temi predefiniti, ricavati dall'archivio dell'autore.
-  Su un archivio nuovo la dashboard segnala come lacune i temi su cui non hai
-  ancora scritto nulla.
 - Zeno ha un solo utente. Un uso con più persone, per esempio in una scuola,
   è una proposta della tesi e non è stato costruito.
 

@@ -19,8 +19,8 @@
 # la MIGLIORE PROXY disponibile — sources.ingested_at (data di ingestione del
 # documento). Documenti: la propria ingested_at. Entità: la ingested_at più
 # vecchia fra le fonti che le menzionano (prima comparsa nell'archivio). Temi:
-# non hanno proxy temporale sensata (i 10 semi sono fissi da sempre) — un
-# tema è "nuovo" solo se non fa parte del seed originale (TOPICS_SEED).
+# non hanno proxy temporale sensata — un tema è "nuovo" solo se non fa parte
+# dei temi iniziali (db.temi_iniziali).
 #
 # File .md al click: i temi e le entità hanno una nota derivata nel vault
 # Obsidian (obsidian_vault/Zeno/Temi|Entità/<nome>.md, generata da
@@ -36,13 +36,13 @@ from datetime import datetime, timedelta
 ASSETS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets')
 JS_LIB = os.path.join(ASSETS, '3d-force-graph.min.js')
 
-# zeno_engine (per TOPICS_SEED e la convenzione nomi-file del vault) è un
+# zeno_engine (per i temi iniziali e la convenzione nomi-file del vault) è un
 # sottopacchetto di scripts/: garantiamo che sia importabile anche se questo
 # modulo viene eseguito/importato da una cwd diversa da dashboard.py.
 _SCRIPTS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _SCRIPTS_DIR not in sys.path:
     sys.path.insert(0, _SCRIPTS_DIR)
-from zeno_engine.db import TOPICS_SEED          # noqa: E402
+from zeno_engine.db import temi_iniziali       # noqa: E402
 from zeno_engine.vault import VAULT_ZENO, _nome_file  # noqa: E402
 from zeno_engine.config import BRAIN
 
@@ -92,7 +92,7 @@ def dati_grafo(db_path: str, giorni_nuovi: int = GIORNI_NUOVI_DEFAULT) -> dict:
     con = sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)
     nodi, archi = [], []
     soglia_nuovo = datetime.now() - timedelta(days=giorni_nuovi)
-    seed_temi = set(TOPICS_SEED)
+    seed_temi = set(temi_iniziali())
 
     def _e_nuovo(ts: str | None) -> bool:
         if not ts:
@@ -356,7 +356,7 @@ body{{margin:0;background:#0e1117;overflow:hidden;
   <div class="overlay" id="legenda">
     <b>Legenda</b>
     <div class="riga" style="color:#A8C8E8;font-size:11px;margin-top:2px">NODI (colore = tipo di elemento)</div>
-    <div class="riga"><span class="pallino" style="background:#f6b26b"></span>Tema (uno dei 10 argomenti)
+    <div class="riga"><span class="pallino" style="background:#f6b26b"></span>Tema (argomento di primo livello)
       &nbsp;<span class="pallino" style="background:#4fc3f7"></span>Documento (.md)</div>
     <div class="riga"><span class="pallino" style="background:#e06666"></span>Persona
       &nbsp;<span class="pallino" style="background:#6fa8dc"></span>Organizzazione
@@ -380,7 +380,7 @@ body{{margin:0;background:#0e1117;overflow:hidden;
     </div>
     <div class="riga" style="color:#8AA6C2;font-size:11px">Le community sono i
     cluster che emergono da chi compare insieme nelle tue asserzioni —
-    trasversali ai 10 temi fissi (i colori cambiano solo i nodi entità).</div>
+    trasversali ai temi (i colori cambiano solo i nodi entità).</div>
   </div>
   <!-- in BASSO A DESTRA: a sinistra si sovrapporrebbe alla legenda principale,
        che è alta e arriva in fondo (verificato dal vivo in browser). -->

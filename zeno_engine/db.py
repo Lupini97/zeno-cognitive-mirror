@@ -179,22 +179,59 @@ CREATE INDEX IF NOT EXISTS idx_edges_src ON edges(src_type, src_id);
 CREATE INDEX IF NOT EXISTS idx_edges_dst ON edges(dst_type, dst_id);
 """
 
-# Tassonomia seed (brief §4, livello 1): serve solo a un db NUOVO. Dal
-# 28/09/2026 i temi li decide l'utente (tassonomia.py, dashboard): reinserirli
-# per nome a ogni connect resuscitava quelli rinominati o ritirati ("Islam ed
-# Europa", diventato "Islam", ricompariva vuoto e senza descrizione).
-TOPICS_SEED = [
-    'Intelligence e sicurezza',
-    'Geopolitica',
-    'AI ed etica',
-    'Criminalità organizzata',
-    'Islam',
-    'Complessità ed epistemologia',
-    'Metodo e OSINT',
-    'Scrittura creativa',
-    'Vino e sensorialità',
-    'Vita professionale/militare',
-]
+# Temi con cui parte un archivio NUOVO. Dal 28/09/2026 i temi li decide
+# l'utente (tassonomia.py, dashboard): reinserirli per nome a ogni connect
+# resuscitava quelli rinominati o ritirati, quindi servono solo alla prima
+# connessione. Di serie sono generici: chi usa Zeno li rinomina, unisce o
+# ritira dalla dashboard, e `zeno temi` ne propone di nuovi dai documenti.
+# `temi.iniziali` in zeno_config.yaml li sostituisce; `temi.descrizioni`
+# aggiunge una riga di descrizione ad altri temi (aiuta la classificazione).
+TEMI_GENERICI = {
+    'Lavoro e professione': 'carriera, mestiere, organizzazione del lavoro',
+    'Studio e formazione': 'scuola, università, corsi, metodo di studio',
+    'Scrittura e lettura': 'scrivere, leggere, narrativa, poesia, critica letteraria',
+    'Società e politica': 'istituzioni, potere, diritti, attualità, relazioni internazionali',
+    'Scienza e tecnologia': 'scienze naturali, tecnica, informatica, intelligenza artificiale',
+    'Filosofia ed etica': 'conoscenza, valori, morale, senso dell\'esistenza',
+    'Storia': 'eventi e periodi del passato, memoria collettiva',
+    'Arte e cultura': 'arti visive, musica, cinema, tradizioni',
+    'Relazioni e vita personale': 'famiglia, amicizie, emozioni, scelte di vita',
+    'Salute e benessere': 'corpo, sport, alimentazione, cura di sé',
+}
+
+
+def _sezione_temi() -> dict:
+    from zeno_engine import config
+    try:
+        return (config.load().get('_globale') or {}).get('temi') or {}
+    except Exception:
+        return {}
+
+
+def temi_iniziali() -> dict[str, str]:
+    """nome → descrizione dei temi di un archivio nuovo: `temi.iniziali` di
+    zeno_config.yaml (nomi, oppure {nome, descrizione}), altrimenti TEMI_GENERICI."""
+    voci = _sezione_temi().get('iniziali') or []
+    if not voci:
+        return dict(TEMI_GENERICI)
+    temi = {}
+    for v in voci:
+        if isinstance(v, dict):
+            nome, descr = v.get('nome'), v.get('descrizione')
+        else:
+            nome, descr = v, None
+        nome = str(nome or '').strip()
+        if nome:
+            temi[nome] = str(descr or '').strip()
+    return temi
+
+
+def descrizioni_temi() -> dict[str, str]:
+    """Descrizioni dalla config: temi iniziali più `temi.descrizioni`.
+    Quelle scritte in dashboard (tabella topics) le sovrascrivono."""
+    extra = _sezione_temi().get('descrizioni') or {}
+    tutte = {**temi_iniziali(), **{str(k): str(v) for k, v in extra.items()}}
+    return {n: d for n, d in tutte.items() if d}
 
 
 def connect(db_path: str, vec: bool = False) -> sqlite3.Connection:
@@ -217,8 +254,8 @@ def connect(db_path: str, vec: bool = False) -> sqlite3.Connection:
     con.executescript(SCHEMA)
     _migra(con)
     if not con.execute('SELECT 1 FROM topics LIMIT 1').fetchone():
-        con.executemany('INSERT INTO topics(name, parent_id) VALUES (?, NULL)',
-                        [(t,) for t in TOPICS_SEED])
+        con.executemany('INSERT INTO topics(name, parent_id, descrizione) VALUES (?, NULL, ?)',
+                        [(n, d or None) for n, d in temi_iniziali().items()])
     con.commit()
     return con
 

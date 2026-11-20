@@ -74,6 +74,15 @@ mbti:
 temi:
   # Temi a cui dai la precedenza (si gestiscono anche dalla dashboard).
   prioritari: []
+  # Temi con cui parte un archivio nuovo. Vuoto: dieci temi generici
+  # (zeno_engine/db.py, TEMI_GENERICI). Li cambi poi dalla dashboard, e
+  # Zeno ne propone di nuovi leggendo i tuoi documenti. Esempio:
+  #   iniziali:
+  #   - nome: Fotografia
+  #     descrizione: tecnica, autori, mostre, le mie foto
+  iniziali: []
+  # Una riga di descrizione per altri temi aiuta il modello a classificare.
+  descrizioni: {}
   soglia_gerarchia: 0.3
 graph:
   frequenza_giorni: 5

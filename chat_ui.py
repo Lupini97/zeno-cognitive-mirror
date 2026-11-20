@@ -1161,7 +1161,7 @@ def _normalizza_titolo_hint(raw: str, trigger_pattern: str) -> str:
     Pulisce il titolo estratto da un prompt di comando:
     1. Rimuove il trigger verbale (es. 'aggiungi citazione', 'recensione su')
     2. Rimuove qualsiasi tipo di virgoletta/caporale
-    3. Rimuove l'attribuzione autore finale (es. 'di Cossiga', 'by Hemingway')
+    3. Rimuove l'attribuzione autore finale (es. 'di Calvino', 'by Hemingway')
     """
     hint = re.sub(trigger_pattern, '', raw, flags=re.I).strip()
     hint = re.sub(r'["""\'«»]', '', hint)
@@ -2971,7 +2971,7 @@ with col_chat:
                 _titolo_menu = st.text_input(
                     'Titolo libro (anche parziale)',
                     key='menu_titolo',
-                    placeholder='es. Abecedario, Cossiga, 1984…'
+                    placeholder='es. un titolo o un autore'
                 )
             _label_testo = {
                 'Citazione': 'Citazione da aggiungere',
