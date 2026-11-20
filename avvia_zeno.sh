@@ -1,7 +1,7 @@
 #!/bin/bash
 # avvia_zeno.sh — avvio di Zeno dal terminale: chat e dashboard nel browser.
-# La Zeno.app dell'autore non passa di qui: usa zeno_launcher.py. Niente Docker, niente
-# Qdrant: il motore è zeno.db.
+# zeno_launcher.py (la finestra dell'app) fa la stessa sequenza per conto suo.
+# Fermare Zeno: lsof -ti tcp:8501,8502,11500 | xargs kill
 #
 # Sequenza: demone MLX → zeno sync (messa in pari) → chat :8501 → dashboard :8502.
 
@@ -44,4 +44,4 @@ nohup "$PY" -m streamlit run dashboard.py --server.port 8502 \
     --server.headless true --server.address localhost \
     > /tmp/zeno_dashboard.log 2>&1 &
 
-echo "Zeno V6 avviato: chat http://localhost:8501 · dashboard http://localhost:8502"
+echo "Zeno avviato: chat http://localhost:8501 · dashboard http://localhost:8502"

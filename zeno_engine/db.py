@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS assertions (
     topic_id INTEGER REFERENCES topics(id),
     confidence REAL,                -- confidenza dell'estrazione (0-1)
     asserted_at TEXT,               -- data del contenuto originale (evoluzione del pensiero)
-    modello TEXT                    -- modello Ollama che ha estratto l'asserzione (tracciabilità qualità)
+    modello TEXT                    -- modello che ha estratto l'asserzione (tracciabilità qualità)
 );
 
 CREATE TABLE IF NOT EXISTS entities (

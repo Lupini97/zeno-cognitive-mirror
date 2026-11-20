@@ -317,10 +317,11 @@ def esegui_tutti(con, cfg: dict, verboso: bool = True,
     non deve impedire l'avvio dell'app né bloccare gli altri aggiornamenti.
 
     `salta_motore`: esegue solo i job che NON usano il modello. Serve quando
-    l'Archivista sta macinando in background — tiene llama3.1:8b residente, e
-    aggiungergli `schede` o `temi` significa due modelli in RAM su una macchina
-    da 16 GB, cioè thrashing e nessuno dei due che finisce (gotcha noto). I job
-    locali (snapshot, mind, graph, entita) intanto girano lo stesso."""
+    l'Archivista sta macinando in background e occupa il motore: aggiungergli
+    `schede` o `temi` li mette in coda dietro di lui (con due modelli diversi
+    per i ruoli, com'era fino a novembre 2026, voleva dire anche due modelli in
+    RAM su 16 GB). I job locali (snapshot, mind, graph, entita) intanto girano
+    lo stesso."""
     from zeno_engine import modelli
     from zeno_engine.sync import _backend_raggiungibile
     # LUCCHETTO. Da quando la manutenzione può partire da tre punti diversi

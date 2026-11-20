@@ -22,9 +22,9 @@ from zeno_engine.config import con_nome
 TIMEOUT_SECONDI = 300
 
 HOST = os.environ.get('ZENO_MLX_HOST', '127.0.0.1')
-# 11500 e non 114xx: su questa macchina un `ollama serve` occupa già 11434/11435,
-# e puntare per sbaglio a Ollama darebbe risposte da un backend che non è più il
-# nostro. Sovrascrivibile con ZENO_MLX_PORTA.
+# 11500 e non 11434: quella è la porta di Ollama, il backend usato fino a
+# settembre 2026, e su un Mac che lo ha ancora installato puntarci per sbaglio
+# darebbe risposte da un altro backend. Sovrascrivibile con ZENO_MLX_PORTA.
 PORTA = int(os.environ.get('ZENO_MLX_PORTA', '11500'))
 
 # Nomi Ollama ancora presenti in config o negli appunti → repo MLX equivalente.

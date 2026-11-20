@@ -5,8 +5,20 @@ type: software
 authors:
   - family-names: Modesto
     given-names: Michele
-version: 0.2.0
+version: 0.2.1
 date-released: 2026-11-20
+abstract: >-
+  Prototipo di ricerca di un motore epistemico personale ("specchio
+  cognitivo") che gira in locale su Mac con Apple Silicon: estrae asserzioni
+  dai testi di una persona, le collega in un grafo, dichiara le lacune e pone
+  domande socratiche. Usa un modello linguistico locale con MLX e un archivio
+  SQLite con sqlite-vec e FTS5.
+keywords:
+  - retrieval-augmented generation
+  - local LLM
+  - MLX
+  - personal knowledge management
+  - maieutics
 doi: "10.5281/zenodo.24393322"
 identifiers:
   - type: doi

@@ -167,7 +167,7 @@ cross_linker:
   aree_corpus_escluse:
   - vivino
 
-# ── Motore epistemico (V6, zeno_engine) — vedi AUDIT.md ──────────────────────
+# ── Motore epistemico (zeno_engine) ──────────────────────────────────────────
 motore_epistemico:
   modelli:
     # Repo HuggingFace in formato MLX, serviti dal demone zeno_engine.mlx_server.

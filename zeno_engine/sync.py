@@ -203,9 +203,11 @@ def esegui(con, cfg: dict, verboso: bool = True,
         # Ora parte da sé, ma STACCATO (start_new_session) e con un tetto per
         # esecuzione: l'avvio dell'app non aspetta, la chat resta usabile e
         # l'avanzamento si vede nel pannello "Processi Zeno" (ETA compresa).
-        # Il tetto serve alla RAM: l'Archivista tiene residente llama3.1:8b
-        # accanto al 7B della chat e a bge-m3 — tre modelli su 16 GB vanno in
-        # thrashing (gotcha noto). Si smaltisce a scaglioni, un avvio alla volta.
+        # Il tetto nacque per la RAM, quando l'Archivista teneva residente un
+        # 8B accanto al 7B della chat e a bge-m3 (tre modelli su 16 GB vanno in
+        # thrashing). Oggi un solo modello serve tutti i ruoli, ma il tetto
+        # resta: un'esecuzione lunga si prende il motore per ore. Si smaltisce
+        # a scaglioni, un avvio alla volta.
         cfg_sync = cfg.get('sync') or {}
         tetto = cfg_sync.get('archivista_background_max', 150)
         if not cfg_sync.get('archivista_auto', True):

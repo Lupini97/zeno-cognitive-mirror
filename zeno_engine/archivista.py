@@ -1,9 +1,10 @@
 # Archivista — estrae asserzioni atomiche, entità e stance da ogni chunk.
 #
-# Agente LLM (7-8B via Ollama, localhost) pensato per il BATCH, mai per il
-# tempo reale. L'output è vincolato da JSON Schema (parametro `format` di
-# Ollama): il modello non può produrre JSON malformato; resta comunque un
-# retry difensivo.
+# Agente LLM (il modello locale servito dal demone MLX) pensato per il BATCH,
+# mai per il tempo reale. L'output è vincolato da JSON Schema, imposto token
+# per token da llguidance: il modello non può produrre JSON malformato; resta
+# comunque un retry difensivo. Fino a settembre 2026 il motore era un 7-8B
+# su Ollama, con il parametro `format`.
 #
 # La stance è la posizione di L'UTENTE: viene chiesta solo per i chunk di
 # strato esplicito/dialogico; per il materiale acquisito (libri, formazione)

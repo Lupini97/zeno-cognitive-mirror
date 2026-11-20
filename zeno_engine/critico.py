@@ -155,11 +155,11 @@ def verifica_coppia(a1: tuple, a2: tuple, modello: str) -> dict | None:
 def esegui(con, cfg: dict, topic_id: int | None = None,
            max_coppie: int = 40, verboso: bool = True) -> dict:
     from zeno_engine import modelli
-    # 'ask' (qwen2.5:7b), non 'batch': nel confronto del 2026-07-10 su ragionamento
-    # astratto qwen è parso più cauto/accurato di llama3.1:8b, e il giudizio di
-    # contraddizione è più vicino a un compito di "ask" (valutare una relazione)
-    # che di estrazione atomica. Verificato di nuovo il 2026-07-11: llama produceva
-    # 4 falsi positivi su 5 "confermate".
+    # Ruolo 'ask', non 'batch': il giudizio di contraddizione è più vicino a un
+    # compito di "ask" (valutare una relazione) che di estrazione atomica. La
+    # scelta risale a luglio 2026, quando i ruoli avevano modelli diversi e
+    # llama3.1:8b (batch) produceva 4 falsi positivi su 5 contro qwen2.5:7b
+    # (ask). Oggi i due ruoli usano lo stesso modello.
     modello = modelli.prepara_motore(cfg, 'ask')
     adesso = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     esito = {'coppie': 0, 'contraddizioni': 0}
