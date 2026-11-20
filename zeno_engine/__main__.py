@@ -226,14 +226,14 @@ def cmd_riclassifica(args):
 
 
 def cmd_schede(args):
-    """Genera le schede-tema V6 (cosa sa/come la pensa/tensioni/lacune) dai
+    """Genera le schede-tema (cosa sa/come la pensa/tensioni/lacune) dai
     dati puliti di zeno.db, in memoria_elaborata/profilo/temi_v6/."""
     from zeno_engine import schede
     cfg = config.load()
     con = db.connect(cfg['db'])
     n = schede.genera_tutte(con, cfg, solo_prioritari=args.prioritari)
     con.close()
-    print(f'{n} schede-tema V6 generate in {schede.DIR_SCHEDE}')
+    print(f'{n} schede-tema generate in {schede.DIR_SCHEDE}')
 
 
 def cmd_temi(args):
@@ -552,7 +552,9 @@ def _json_prime(d):
 
 
 def main():
+    from zeno_engine import __version__
     ap = argparse.ArgumentParser(prog='zeno_engine', description='Motore epistemico di Zeno')
+    ap.add_argument('--version', action='version', version=f'Zeno {__version__}')
     sub = ap.add_subparsers(dest='cmd', required=True)
 
     p = sub.add_parser('ingest', help='Ingerisce il corpus Markdown in zeno.db')
@@ -588,7 +590,7 @@ def main():
     p = sub.add_parser('temi', help='Proposte di temi nuovi e prioritari (conferma in dashboard)')
     p.set_defaults(fn=cmd_temi)
 
-    p = sub.add_parser('schede', help='Genera le schede-tema V6 dai dati di zeno.db')
+    p = sub.add_parser('schede', help='Genera le schede-tema dai dati di zeno.db')
     p.add_argument('--prioritari', action='store_true', help='solo i temi prioritari')
     p.set_defaults(fn=cmd_schede)
 

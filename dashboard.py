@@ -16,7 +16,9 @@ from zeno_engine.config import BRAIN
 # Protetto: come pagina di zeno_app.py il page_config lo fa l'entry point;
 # da sola (streamlit run dashboard.py, porta 8502) resta valido.
 try:
-    st.set_page_config(page_title='Zeno Dashboard', layout='wide', page_icon='Z')
+    from interfaccia import LOGO as _LOGO
+    st.set_page_config(page_title='Zeno Dashboard', layout='wide',
+                       page_icon=_LOGO if os.path.exists(_LOGO) else 'Z')
 except Exception:
     pass
 # Colori e caratteri da tema_zeno.py (anche .lacuna-dash): i colori fissi di
@@ -30,7 +32,8 @@ h3 { font-size: 15px !important; }
 @st.cache_resource
 def _carica_logo():
     """Legge il logo una volta sola per processo."""
-    p = Path(__file__).resolve().parent / 'Logo_Zeno.png'
+    from interfaccia import LOGO
+    p = Path(LOGO)
     if p.exists():
         return p.read_bytes()
     return None
@@ -59,6 +62,8 @@ from interfaccia import tema_zeno
 tema_zeno.applica(cfg)
 with _col_titolo:
     st.markdown(tema_zeno.testata('gemello statistico'), unsafe_allow_html=True)
+    from zeno_engine import __version__ as _VERSIONE
+    st.caption(f'Versione {_VERSIONE}')
 
 # ── Banner calibrazione ────────────────────────────────────────────────────
 _stato_cal = cfg.get('profilo_cognitivo', {}).get('stato_calibrazione', 'in_calibrazione')
@@ -553,7 +558,7 @@ history = carica_history_grafo()
 # dict vuoto come fallback innocuo — ogni tab gestisce già i campi mancanti.
 last = snaps[-1] if snaps else {}
 if not snaps:
-    st.caption('📊 Nessuno snapshot ancora generato in questa sessione V6 — '
+    st.caption('📊 Nessuno snapshot ancora generato — '
               'la tab Statistiche sarà vuota finché non ne arriva uno '
               '(automatico al prossimo avvio di Zeno, o `zeno_engine snapshot`).')
 
@@ -1226,14 +1231,14 @@ with tab_temi:
                     else:
                         st.markdown(f"- «{_u['tema']}» da «{_u['da']}» a «{_u['a']}» ({_u['perche']})")
     st.divider()
-    st.markdown('##### Schede tema V6')
+    st.markdown('##### Schede tema')
     st.caption('Schede generate dai dati puliti di zeno.db: cosa sai, come la '
                'pensi, tensioni, lacune. Rigenerabili con `python -m zeno_engine schede`.')
     _schede_dir = os.path.join(cfg['percorsi']['memoria'], 'profilo', 'temi_v6')
     # esclude i file AppleDouble ._* di ExFAT (binari, danno errore in lettura)
     _md_v6 = lambda d: [f for f in os.listdir(d) if f.endswith('.md') and not f.startswith('.')]
     if not os.path.isdir(_schede_dir) or not _md_v6(_schede_dir):
-        st.info('Nessuna scheda V6 ancora generata. Lanciale con '
+        st.info('Nessuna scheda tema ancora generata. Lanciale con '
                 '`python -m zeno_engine schede` (dal terminale).')
     else:
         _prio_low = {p.lower() for p in cfg.get('temi', {}).get('prioritari', [])}

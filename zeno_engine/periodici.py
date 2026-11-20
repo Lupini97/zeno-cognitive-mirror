@@ -244,7 +244,7 @@ REGISTRO = [
      'marker': None, 'esegui': _job_critico,
      'dovuto': lambda con, cfg: _dovuto_generico(con, 'critico', 7)},
 
-    {'nome': 'schede', 'desc': 'Schede-tema V6', 'giorni': 7, 'motore': True,
+    {'nome': 'schede', 'desc': 'Schede-tema', 'giorni': 7, 'motore': True,
      'marker': None, 'esegui': _job_schede,
      'dovuto': lambda con, cfg: _dovuto_generico(con, 'schede', 7)},
 ]

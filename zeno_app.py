@@ -7,9 +7,14 @@
 # avviabili anche da soli (il loro set_page_config è protetto: quando
 # girano come pagina lo fa già questo entry point).
 
+import os
+
 import streamlit as st
 
-st.set_page_config(page_title='Zeno', page_icon='Z', layout='wide')
+from interfaccia import LOGO
+
+st.set_page_config(page_title='Zeno', page_icon=LOGO if os.path.exists(LOGO) else 'Z',
+                   layout='wide')
 
 pagine = st.navigation([
     st.Page('chat_ui.py', title='Chat', icon=':material/chat:', default=True),

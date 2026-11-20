@@ -51,8 +51,10 @@ _HTML = """<!DOCTYPE html>
   }
 
   #logo {
-    font-size: 52px;
-    margin-bottom: 10px;
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    margin-bottom: 14px;
   }
 
   #title {
@@ -104,20 +106,20 @@ _HTML = """<!DOCTYPE html>
   #version {
     position: absolute;
     bottom: 14px;
-    font-size: 9px;
-    color: #2A4A6A;
+    font-size: 11px;
+    color: #5A8FC0;
     letter-spacing: 0.5px;
   }
 </style>
 </head>
 <body>
-  <div id="logo">🧠</div>
+  <img id="logo" src="__LOGO__" alt="">
   <div id="title">ZENO</div>
-  <div id="subtitle">Sistema di intelligenza artificiale personale</div>
+  <div id="subtitle">Specchio cognitivo personale</div>
   <div id="separator"></div>
   <div id="status">Inizializzazione…</div>
   <div id="bar-track"><div id="bar-fill"></div></div>
-  <div id="version">V4.7</div>
+  <div id="version">Versione __VERSIONE__</div>
 
   <script>
     function setStatus(testo, progresso) {
@@ -128,6 +130,20 @@ _HTML = """<!DOCTYPE html>
 </body>
 </html>
 """
+
+
+def _html() -> str:
+    """La pagina della splash con il logo (incorporato in base64: la pagina
+    non ha un indirizzo da cui caricare file) e la versione del codice."""
+    import base64
+    from interfaccia import LOGO
+    from zeno_engine import __version__
+    try:
+        with open(LOGO, 'rb') as f:
+            logo = 'data:image/png;base64,' + base64.b64encode(f.read()).decode('ascii')
+    except OSError:
+        logo = ''
+    return _HTML.replace('__LOGO__', logo).replace('__VERSIONE__', __version__)
 
 
 # ── Classe splash ─────────────────────────────────────────────────────────────
@@ -192,7 +208,7 @@ class ZenoSplash:
         """
         self._window = webview.create_window(
             title            = 'Zeno',
-            html             = _HTML,
+            html             = _html(),
             width            = self.W,
             height           = self.H,
             min_size         = (960, 600),

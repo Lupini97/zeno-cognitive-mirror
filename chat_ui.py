@@ -22,7 +22,9 @@ from ddgs import DDGS
 # Protetto: quando chat_ui gira come pagina di zeno_app.py il page_config
 # lo ha già fatto l'entry point; da sola (streamlit run chat_ui.py) resta valido.
 try:
-    st.set_page_config(page_title='Zeno', page_icon='Z', layout='wide')
+    from interfaccia import LOGO as _LOGO
+    st.set_page_config(page_title='Zeno', page_icon=_LOGO if os.path.exists(_LOGO) else 'Z',
+                       layout='wide')
 except Exception:
     pass
 # Colori e caratteri vivono in interfaccia/tema_zeno.py (variante in zeno_config.yaml,
@@ -1953,11 +1955,12 @@ def registra_arco_implicito(testo_risposta_utente: str):
 # ── Sidebar sinistra: gemello statistico ─────────────────────────────────────
 with st.sidebar:
     # ── Logo ──────────────────────────────────────────────────────────────
-    logo_path = str(Path(__file__).resolve().parent.parent / 'Logo_Zeno.png')
-    if os.path.exists(logo_path):
-        st.image(logo_path, width=80)
+    from interfaccia import LOGO as _LOGO
+    from zeno_engine import __version__ as _VERSIONE
+    if os.path.exists(_LOGO):
+        st.image(_LOGO, width=80)
     st.title('Zeno')
-    st.caption(con_nome('Archivio personale di @UTENTE@'))
+    st.caption(con_nome('Archivio personale di @UTENTE@') + f' · versione {_VERSIONE}')
     st.divider()
 
     _render_processi_sidebar(cfg['percorsi']['stats'])

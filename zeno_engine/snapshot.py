@@ -84,7 +84,7 @@ def genera(con, cfg: dict, cartella: str = STATS_DIR) -> str:
     dati = {
         'data': oggi,
         'timestamp': datetime.now().isoformat(),
-        'motore': 'V6 (zeno.db)',
+        'motore': 'zeno.db',
         'vettori_totali': con.execute('SELECT COUNT(*) FROM chunks').fetchone()[0],
         'asserzioni_totali': con.execute('SELECT COUNT(*) FROM assertions').fetchone()[0],
         'documenti': documenti,

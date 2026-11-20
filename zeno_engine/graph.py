@@ -110,7 +110,7 @@ def genera(con, cartella: str = STATS_DIR) -> str:
         'meta': {'generato': datetime.now().isoformat(), 'n_nodi': len(nodi),
                  'n_archi': len(archi), 'n_lacune': len(n_lacune), 'versione': '6.0'},
         'nodi': nodi, 'archi': archi, 'metriche': {},
-        'lacune': [], 'legenda': {'fonte': 'zeno_engine.graph (V6, zeno.db)'},
+        'lacune': [], 'legenda': {'fonte': 'zeno_engine.graph (zeno.db)'},
     }
     os.makedirs(cartella, exist_ok=True)
     percorso = os.path.join(cartella, 'grafo_connessioni.json')

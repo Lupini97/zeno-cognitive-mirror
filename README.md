@@ -1,8 +1,16 @@
-# Zeno
+<p align="center">
+  <img src="interfaccia/assets/logo_zeno.png" alt="Logo di Zeno" width="160">
+</p>
+
+<h1 align="center">Zeno</h1>
+
+<p align="center">
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24393322.svg)](https://doi.org/10.5281/zenodo.24393322)
 [![Licenza: MIT](https://img.shields.io/badge/licenza-MIT-blue.svg)](LICENSE)
 ![Piattaforma: macOS su Apple Silicon](https://img.shields.io/badge/macOS-Apple%20Silicon-lightgrey.svg)
+
+</p>
 
 **English summary.** Zeno is a research prototype of a personal epistemic
 engine, designed as a "cognitive mirror". It reads what one person has written
@@ -40,11 +48,14 @@ computer.
 - [Per chi è](#per-chi-è)
 - [Che cosa serve](#che-cosa-serve)
 - [Installazione](#installazione)
+- [Prima di partire: i documenti](#prima-di-partire-i-documenti)
 - [Primo uso](#primo-uso)
 - [Come funziona](#come-funziona)
 - [Risultati e limiti](#risultati-e-limiti)
+- [Modelli provati e miglioramenti](#modelli-provati-e-miglioramenti)
 - [Rete e dati personali](#rete-e-dati-personali)
 - [Comandi da terminale](#comandi-da-terminale)
+- [Documentazione](#documentazione)
 - [Come citare](#come-citare)
 
 ## Per chi è
@@ -141,11 +152,59 @@ Alla fine `~/Zeno` contiene:
 └── zeno.db             l'archivio, creato al primo avvio
 ```
 
-## Primo uso
+## Prima di partire: i documenti
 
-**1. Metti i documenti.** Zeno legge file Markdown (`.md`) dentro
-`~/Zeno/documents/`. La cartella in cui metti un file decide lo strato di
-conoscenza e quindi quanto pesa nelle risposte:
+Zeno lavora solo su ciò che gli dai. Con l'archivio vuoto non ha niente da
+citare, niente da collegare e nessuna domanda da farti. Prima del primo avvio
+conviene caricare un nucleo di documenti: qualche decina di tuoi testi
+(appunti, riflessioni, articoli che hai scritto) e qualche scheda o sintesi di
+ciò che hai letto. Potrai aggiungerne altri quando vuoi: Zeno li legge a ogni
+avvio.
+
+**Usa il Markdown.** Zeno legge solo file `.md`. Se i tuoi documenti sono in
+PDF, Word, PowerPoint o Excel, conviene convertirli prima, fuori da Zeno, con
+uno strumento come [MarkItDown](https://github.com/microsoft/markitdown)
+(Microsoft, licenza MIT). Conserva titoli, elenchi e tabelle, e ti lascia
+controllare il risultato prima di darlo a Zeno.
+
+Installa MarkItDown in un ambiente suo, separato da quello di Zeno:
+
+```bash
+python3.14 -m venv ~/.markitdown && ~/.markitdown/bin/pip install 'markitdown[pdf,docx,pptx,xlsx]'
+```
+
+Converti un file:
+
+```bash
+~/.markitdown/bin/markitdown documento.pdf -o documento.md
+```
+
+Oppure tutti i PDF e i DOCX di una cartella, per esempio `~/Desktop/da_convertire`:
+
+```bash
+cd ~/Desktop/da_convertire && bash -c 'for f in *.pdf *.docx; do [ -e "$f" ] && ~/.markitdown/bin/markitdown "$f" -o "${f%.*}.md"; done'
+```
+
+Apri qualche `.md` e controlla che il testo ci sia. I PDF fatti di immagini
+(scansioni) di solito escono vuoti: per quelli usa il convertitore di Zeno,
+che legge le immagini con Tesseract (vedi sotto).
+
+**Dai una data e un titolo.** Zeno usa la data per seguire come cambia il tuo
+pensiero. La prende, nell'ordine, dal frontmatter, dal nome del file
+(`2025-03-12 Appunti.md`) e solo alla fine dalla data di modifica del file,
+che dopo una conversione è quella di oggi. Il titolo lo prende dal frontmatter
+o dal primo titolo `#` del testo. Un'intestazione così basta:
+
+```markdown
+---
+title: Appunti sulla memoria
+date: 2025-03-12
+---
+```
+
+**Metti ogni file nella cartella giusta.** Zeno legge i file dentro
+`~/Zeno/documents/`. La cartella decide lo strato di conoscenza, e quindi
+quanto pesa il documento nelle risposte:
 
 | Cartella | Che cosa ci va | Strato |
 |---|---|---|
@@ -153,13 +212,19 @@ conoscenza e quindi quanto pesa nelle risposte:
 | `libri/`, `articoli_saggistica/`, `formazione/` | ciò che hai letto o studiato | acquisito |
 | `chatgpt/`, `gemini/` (creale tu) | conversazioni archiviate | dialogico |
 
-Se hai PDF, DOCX, HTML o TXT, mettili nelle stesse cartelle e convertili.
+**In alternativa, il convertitore di Zeno.** Metti PDF, DOCX, HTML o TXT
+direttamente nelle cartelle di `documents/` e lancia il comando qui sotto.
 Zeno scrive il `.md` accanto a ogni file e sposta l'originale in
-`~/Zeno/documents_originali/`.
+`~/Zeno/documents_originali/`. Per le scansioni usa Tesseract, se l'hai
+installato.
 
 ```bash
 cd ~/Zeno/scripts && ../.venv_zeno/bin/python -m zeno_engine converti
 ```
+
+## Primo uso
+
+**1. Prepara i documenti** come spiegato nella sezione precedente.
 
 **2. Avvia Zeno.**
 
@@ -315,6 +380,43 @@ Limiti da tenere presenti:
 - Zeno ha un solo utente. Un uso con più persone, per esempio in una scuola,
   è una proposta della tesi e non è stato costruito.
 
+## Modelli provati e miglioramenti
+
+Zeno è cambiato molto fra giugno e novembre 2026. Gli schemi interni hanno due
+nomi, V5 e V6; le versioni pubblicate del software si chiamano 0.2.0, 0.2.1 e
+così via.
+
+| Periodo | Schema | Modello linguistico | Embedding | Esecuzione |
+|---|---|---|---|---|
+| fino a luglio 2026 | V5 | Llama 3.1 8B | nomic-embed-text v1.5 | Ollama, LlamaIndex, Qdrant |
+| luglio-settembre | V6 | Qwen2.5 3B (classifica), Llama 3.1 8B (estrae), Qwen2.5 7B (risponde) | bge-m3 | Ollama, SQLite |
+| 6 settembre-17 novembre | V6 | Qwen3-4B-Instruct-2507 per tutto | bge-m3 | MLX |
+| 17-18 novembre | V6 | Qwen3.5-4B risponde, Qwen3-4B-2507 estrae | bge-m3 | MLX |
+| dal 18 novembre (0.2.x) | V6 | Qwen3.5-4B per tutto | bge-m3 | MLX |
+
+Provati e scartati: Qwen3-8B (a settembre degenerava nell'estrazione, a
+novembre ha inventato 3 risposte su 30), Qwen3.5-9B (stessa qualità di
+estrazione, metà velocità, memoria quasi tripla), il reranker
+bge-reranker-v2-m3 (migliora il recupero, non le risposte), tre modelli
+esterni per la sola decisione «i documenti bastano?» (nessuno meglio del
+modello già in memoria).
+
+Come sono cambiate le prestazioni principali:
+
+| Misura | Prima | Dopo |
+|---|---|---|
+| Tempo per risposta | 35-120 s (Ollama, luglio) | 26-47 s (MLX, settembre); 18,9 s di mediana sul set di prova (novembre) |
+| Estrazione delle asserzioni | circa 41 s a frammento (Llama 3.1 8B su Ollama) | circa 21 s (Qwen3.5-4B su MLX) |
+| Memoria del modello | 4,2 GB (Llama 3.1 8B) | circa 3 GB (Qwen3.5-4B) |
+| Risposte corrette sul set di prova | 26/30 (Qwen3.5-4B, istruzioni iniziali) | 29/30 |
+| Lacune riconosciute | 3/7 | 7/7 |
+| Fedeltà ai documenti (giudice locale) | 1,70 (configurazione iniziale) | 1,93 |
+| Brano giusto passato al modello | 19/23 | 21/23 |
+
+Le misure di luglio e settembre vengono da poche domande; quelle di novembre
+dal set di 30. Le tabelle complete, il metodo e i limiti sono in
+[docs/METODO.md](docs/METODO.md).
+
 ## Rete e dati personali
 
 Dettagli in [PRIVACY.md](PRIVACY.md). In breve: i tuoi testi non lasciano il
@@ -364,6 +466,15 @@ Test automatici, su dati inventati:
 ```bash
 cd ~/Zeno/scripts && ../.venv_zeno/bin/python -m unittest discover -s tests -t . -v
 ```
+
+## Documentazione
+
+| File | Che cosa contiene |
+|---|---|
+| [README.md](README.md) | che cos'è Zeno, installazione, primo uso, sintesi dei risultati |
+| [docs/GUIDA.md](docs/GUIDA.md) | guida dettagliata: chat, dashboard, lavori in background, configurazione, comandi, problemi comuni |
+| [docs/METODO.md](docs/METODO.md) | come si è arrivati a Zeno: storia, scelta dei modelli, misure, verifica esterna, limiti |
+| [PRIVACY.md](PRIVACY.md) | che cosa esce dal computer e che cosa resta |
 
 ## Come citare
 

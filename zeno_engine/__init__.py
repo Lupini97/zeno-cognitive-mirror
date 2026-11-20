@@ -1,14 +1,11 @@
-# scripts/zeno_engine/__init__.py — Motore epistemico di Zeno (V6).
+# zeno_engine — il motore di Zeno: lettura dei documenti, asserzioni, temi,
+# recupero e risposte, sopra un solo file SQLite (zeno.db, con sqlite-vec e
+# FTS5). I modelli girano nel demone MLX locale (zeno_engine.mlx_server).
 #
-# Sostituisce lo stack V5 (LlamaIndex+Qdrant), congelato e intatto in
-# scripts/v5_deprecato/. Fonte di verità unica: BRAIN/zeno.db
-# (SQLite + sqlite-vec). Vedi BRAIN/AUDIT.md per il razionale.
-#
-# Runtime: BRAIN/.venv_zeno (Python 3.14 Homebrew) — venv dedicato
-# perché il Python 3.11 pyenv del V5 è compilato senza
-# enable_load_extension, requisito di sqlite-vec. Il venv V5 non è stato toccato.
-#
-# ZERO CLOUD: nessun modulo di questo pacchetto apre connessioni di rete;
-# l'unico processo esterno è il demone MLX su localhost.
+# Nessun modulo di questo pacchetto manda testi fuori dal computer: l'unico
+# processo esterno è il demone MLX su localhost.
 
-__version__ = '0.1.0'
+# Numero di versione unico: lo mostrano la schermata iniziale, la chat, la
+# dashboard, avvia_zeno.sh e `python -m zeno_engine --version`. Va cambiato
+# insieme a version in CITATION.cff.
+__version__ = '0.2.1'

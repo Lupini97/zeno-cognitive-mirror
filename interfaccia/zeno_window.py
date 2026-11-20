@@ -163,12 +163,8 @@ def collega_finestra(window: webview.Window, on_close=None):
     # Icona Dock personalizzata + visibilità nel Dock (macOS)
     try:
         import AppKit
-        logo = Path(__file__).resolve().parent.parent.parent / 'Logo_Zeno.png'
-        if not logo.exists():
-            # Fallback: cerca in tutta la cartella BRAIN
-            matches = list(Path(__file__).resolve().parent.parent.parent.glob('**/Logo_Zeno.png'))
-            if matches:
-                logo = matches[0]
+        from interfaccia import LOGO
+        logo = Path(LOGO)
         if logo.exists():
             img = AppKit.NSImage.alloc().initWithContentsOfFile_(str(logo))
             AppKit.NSApp.setApplicationIconImage_(img)

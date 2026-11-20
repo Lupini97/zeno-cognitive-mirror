@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../interfaccia/assets/logo_zeno.png" alt="Logo di Zeno" width="96">
+</p>
+
 # Come si è arrivati a Zeno
 
 Questo documento racconta il percorso di Zeno da giugno a novembre 2026: che
@@ -81,6 +85,11 @@ Cinque vincoli hanno guidato tutte le scelte successive.
 
 ## 3. Cronologia
 
+V5 e V6 sono i nomi interni delle due architetture di Zeno, non numeri di
+versione. Le versioni pubblicate del software si chiamano 0.2.0, 0.2.1 e così
+via: sono quelle della release su GitHub, del DOI su Zenodo e della schermata
+iniziale del programma.
+
 ### V5: archivio che riassume (fino a luglio 2026)
 
 La prima versione usava LlamaIndex come framework RAG e Qdrant, in un
@@ -163,7 +172,8 @@ introdotto il posto garantito per la ricerca per parole e ha portato
 Qwen3.5-4B su tutti i ruoli. Il 18 novembre è arrivato anche un guardiano: se
 un calcolo sulla GPU non torna per 120 secondi, il demone si chiude e la
 richiesta successiva lo riavvia. Il blocco era capitato davvero e aveva
-fermato una prova per 12 ore. La versione pubblica 0.2.0 è del 20 novembre.
+fermato una prova per 12 ore. Le versioni pubbliche 0.2.0 e 0.2.1 sono del 20
+novembre.
 
 ## 4. Scelta dei modelli
 

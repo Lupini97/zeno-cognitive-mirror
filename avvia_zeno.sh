@@ -44,4 +44,5 @@ nohup "$PY" -m streamlit run dashboard.py --server.port 8502 \
     --server.headless true --server.address localhost \
     > /tmp/zeno_dashboard.log 2>&1 &
 
-echo "Zeno avviato: chat http://localhost:8501 · dashboard http://localhost:8502"
+VERSIONE=$(sed -n "s/^__version__ = '\(.*\)'/\1/p" "$SCRIPTS/zeno_engine/__init__.py")
+echo "Zeno $VERSIONE avviato: chat http://localhost:8501 · dashboard http://localhost:8502"
