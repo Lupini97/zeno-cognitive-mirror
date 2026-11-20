@@ -403,14 +403,16 @@ token.
 > I valori vanno letti con cautela. Trenta domande sono poche, e differenze di
 > copertura o di fedeltà inferiori a un decimo corrispondono a una o due
 > risposte; il giudice è un modello piccolo, della stessa famiglia di quelli
-> giudicati e identico a quello della prima riga, e un giudice di queste
+> giudicati e identico a quello [della prima configurazione nella tabella
+> della sezione 6], e un giudice di queste
 > dimensioni tende a premiare le risposte lunghe, per cui la fedeltà potrebbe
 > risultare sovrastimata; il conteggio delle lacune segnalate a torto
 > comprende anche le lacune parziali dichiarate dentro una risposta corretta.
 > La misura, infine, è stata condotta da chi ha scritto il programma, sul
 > proprio archivio.
 >
-> (tesi, par. 4.1.1)
+> (tesi, par. 4.1.1; fra parentesi quadre un adattamento: la tesi rimanda
+> alla propria tabella)
 
 Altri limiti noti:
 
