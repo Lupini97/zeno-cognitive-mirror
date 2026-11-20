@@ -25,6 +25,9 @@ identifiers:
     value: "10.5281/zenodo.24393322"
     description: "Tutte le versioni"
   - type: doi
+    value: "10.5281/zenodo.24398096"
+    description: "Versione 0.2.1"
+  - type: doi
     value: "10.5281/zenodo.24393323"
     description: "Versione 0.2.0"
 license: MIT
